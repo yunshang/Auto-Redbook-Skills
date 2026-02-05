@@ -49,13 +49,13 @@ cd Auto-Redbook-Skills
 - Alma：`~/.config/Alma/skills/`
 - TRAE：`/your-path/.trae/skills/`
 
-### 2. 安装依赖
+### 2. 安装依赖（使用 uv）
 
-**Python：**
+**Python（uv）：**
 
 ```bash
-pip install -r requirements.txt
-playwright install chromium
+uv sync
+uv run python -m playwright install chromium
 ```
 
 **Node.js：**
@@ -67,25 +67,43 @@ npx playwright install chromium
 
 ---
 
+## 🐳 开发模式（Docker Compose + uv）
+
+```bash
+# 构建开发镜像
+docker compose -f docker-compose.dev.yml build
+
+# 启动开发容器（进入交互式 shell）
+docker compose -f docker-compose.dev.yml run --rm redbook-dev bash
+```
+
+容器内使用示例：
+
+```bash
+uv run python scripts/render_xhs.py demos/content.md
+```
+
+---
+
 ## 🎨 渲染图片（Python）
 
 核心脚本：`scripts/render_xhs.py`
 
 ```bash
 # 最简单用法（默认主题 + 手动分页）
-python scripts/render_xhs.py demos/content.md
+uv run python scripts/render_xhs.py demos/content.md
 
 # 使用自动分页（推荐：内容长短难控）
-python scripts/render_xhs.py demos/content.md -m auto-split
+uv run python scripts/render_xhs.py demos/content.md -m auto-split
 
 # 使用固定尺寸自动缩放（auto-fit）
-python scripts/render_xhs.py demos/content_auto_fit.md -m auto-fit
+uv run python scripts/render_xhs.py demos/content_auto_fit.md -m auto-fit
 
 # 切换主题（例如 Playful Geometric）
-python scripts/render_xhs.py demos/content.md -t playful-geometric -m auto-split
+uv run python scripts/render_xhs.py demos/content.md -t playful-geometric -m auto-split
 
 # 自定义尺寸和像素比
-python scripts/render_xhs.py demos/content.md -t retro -m dynamic --width 1080 --height 1440 --max-height 2160 --dpr 2
+uv run python scripts/render_xhs.py demos/content.md -t retro -m dynamic --width 1080 --height 1440 --max-height 2160 --dpr 2
 ```
 
 **主要参数：**
@@ -136,7 +154,7 @@ XHS_COOKIE=your_cookie_string_here
 ### 2. 手动发布（可选）
 
 ```bash
-python scripts/publish_xhs.py \
+uv run python scripts/publish_xhs.py \
   --title "笔记标题" \
   --desc "笔记描述内容" \
   --images cover.png card_1.png card_2.png
